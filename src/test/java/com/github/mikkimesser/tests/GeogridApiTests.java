@@ -9,6 +9,9 @@ import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.github.mikkimesser.helpers.CustomApiListener.withCustomTemplates;
+import static com.github.mikkimesser.specifications.Specifications.*;
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -18,157 +21,161 @@ import static org.hamcrest.Matchers.*;
 public class GeogridApiTests extends TestBase {
     /*
     1. Модель для респонса searchGeogridByExistingIdTest() +
-    2. Cпецификации
-    3. Аллюр лисенер
+    2. Cпецификации +
+    3. Аллюр лисенер +
     4. Степы
-    5. Шаблоны
+    5. Шаблоны +
     6. Telegram-бот
     7. Ридми.мд
+    8. Дженкинс
      */
     @Test
     @DisplayName("find geogrid by existing id test")
     void searchGeogridByExistingIdTest() {
-        String geogridId = testDataConfig.existingGeogridId();
-        String endpoint = String.format("/%s", geogridId);
+        step("search geogrid by id and validate the result", () -> {
+            String geogridId = testDataConfig.existingGeogridId();
+            String endpoint = String.format("/%s", geogridId);
 
-        FetchGeogridResponseBody responseBody = given()
-                .when()
-                .header("Authorization", credentialsConfig.authorizationToken())
-                .log().all()
-                .get(endpoint)
-                .then()
-                .log().all()
-                .statusCode(200)
-                .extract().as(FetchGeogridResponseBody.class);
-
-        assertThat(responseBody.getId(), equalTo(geogridId));
-        assertThat(responseBody.getRanks().length, greaterThan(0));
+            FetchGeogridResponseBody responseBody = given()
+                    .spec(requestSpecification)
+                    .get(endpoint)
+                    .then()
+                    .spec(responseSpecification200)
+                    .extract().as(FetchGeogridResponseBody.class);
+            step("verifying fetched geogrid data", () -> {
+                assertThat(responseBody.getId(), equalTo(geogridId));
+                assertThat(responseBody.getRanks().length, greaterThan(0));
+            });
+        });
     }
 
     @Test
     @DisplayName("search geogrid by non-existing id test")
     void searchGeogridByNonExistingIdTest() {
-        String endpoint = String.format("/%s", testDataConfig.nonExistingGeogridId());
+        step("search geogrid by non-existent id and check the result code", () -> {
+            String endpoint = String.format("/%s", testDataConfig.nonExistingGeogridId());
 
-        given()
-                .when()
-                .header("Authorization", credentialsConfig.authorizationToken())
-                .log().all()
-                .get(endpoint)
-                .then()
-                .log().all()
-                .statusCode(404);
+            step("verify result code", () ->
+                    given()
+                            .spec(requestSpecification)
+                            .get(endpoint)
+                            .then()
+                            .log().all()
+                            .statusCode(404));
+        });
     }
 
     @Test
     @DisplayName("search geogrid with non-existing authorization token test")
     void searchGeogridWithNonExistingAuthTokenTest() {
-        String geogridId = testDataConfig.existingGeogridId();
-        String endpoint = String.format("/%s", geogridId);
+        step("search geogrid with non-existent authorization token header and check the result code", () -> {
+            String geogridId = testDataConfig.existingGeogridId();
+            String endpoint = String.format("/%s", geogridId);
 
-        given()
-                .when()
-                .header("Authorization", credentialsConfig.nonExistingAuthorizationToken())
-                .log().all()
-                .get(endpoint)
-                .then()
-                .log().all()
-                .statusCode(403);
-
+            step("verify result code", () ->
+                    given()
+                            .when()
+                            .header("Authorization", credentialsConfig.nonExistingAuthorizationToken())
+                            .filter(withCustomTemplates())
+                            .log().all()
+                            .get(endpoint)
+                            .then()
+                            .spec(responseSpecification403));
+        });
     }
 
     @Test
     @DisplayName("search geogrid without authorization token test")
     void searchGeogridWithoutAuthTokenTest() {
-        String geogridId = testDataConfig.existingGeogridId();
-        String endpoint = String.format("/%s", geogridId);
+        step("search geogrid without authorization token header and check the result code", () -> {
+            String geogridId = testDataConfig.existingGeogridId();
+            String endpoint = String.format("/%s", geogridId);
 
-        given()
-                .when()
-                .log().all()
-                .get(endpoint)
-                .then()
-                .log().all()
-                .statusCode(403);
+            step("verify result code", () ->
+                    given()
+                            .when()
+                            .filter(withCustomTemplates())
+                            .log().all()
+                            .get(endpoint)
+                            .then()
+                            .spec(responseSpecification403));
+        });
     }
 
     @Test
     @DisplayName("get geogrids list by page number test")
-    void getGeogridsListByPageNumberTest(){
-        String endpoint = "/";
+    void getGeogridsListByPageNumberTest() {
+        step(String.format("fetching the list of geogrids on the page number %s",
+                testDataConfig.geogridListPageNumber().toString()), () -> {
 
-        FetchGeogridResponseBody[] geogridsList =
-        given()
-                .when()
-                .header("Authorization", credentialsConfig.authorizationToken())
-                .queryParam("page", testDataConfig.geogridListPageNumber().toString())
-                .log().all()
-                .get(endpoint)
-                .then()
-                .log().all()
-                .statusCode(200)
-                .extract().as(FetchGeogridResponseBody[].class);
+            String endpoint = "/";
 
-        assertThat(geogridsList.length, greaterThan(0));
+            FetchGeogridResponseBody[] geogridsList =
+                    given()
+                            .spec(requestSpecification)
+                            .get(endpoint)
+                            .then()
+                            .spec(responseSpecification200)
+                            .extract().as(FetchGeogridResponseBody[].class);
+            step("check fetched list length", () ->
+                    assertThat(geogridsList.length, greaterThan(0)));
+        });
     }
 
     @Test
     @DisplayName("create geogrid test")
-    void createGeogridTest(){
-        String endpoint = "/";
+    void createGeogridTest() {
+        step("creating new geogrid", () -> {
+            String endpoint = "/";
 
-        TestDataConfig testDataConfig = ConfigFactory.create(TestDataConfig.class, System.getProperties());
+            CreateGeogridRequestBody requestBody = new CreateGeogridRequestBody();
 
-        CreateGeogridRequestBody requestBody = new CreateGeogridRequestBody();
+            step("initializing create request body", () -> {
+                requestBody.setBusinessName(testDataConfig.businessName());
+                requestBody.setBusinessPlaceId(testDataConfig.businessPlaceId());
+                requestBody.setBusinessCountry(testDataConfig.businessCountry());
+                requestBody.setGridCenterLat(testDataConfig.gridCenterLat());
+                requestBody.setGridCenterLng(testDataConfig.gridCenterLng());
+                requestBody.setGridPointDistance(testDataConfig.gridPointDistance());
+                requestBody.setGridDistanceMeasure(testDataConfig.gridDistanceMeasure());
+                requestBody.setGridSize(testDataConfig.gridSize());
+                requestBody.setLocalLanguageEnabled(testDataConfig.localLanguageEnabled());
+                requestBody.setSearchTerm(testDataConfig.searchTerm());
 
-        requestBody.setBusinessName(testDataConfig.businessName());
-        requestBody.setBusinessPlaceId(testDataConfig.businessPlaceId());
-        requestBody.setBusinessCountry(testDataConfig.businessCountry());
-        requestBody.setGridCenterLat(testDataConfig.gridCenterLat());
-        requestBody.setGridCenterLng(testDataConfig.gridCenterLng());
-        requestBody.setGridPointDistance(testDataConfig.gridPointDistance());
-        requestBody.setGridDistanceMeasure(testDataConfig.gridDistanceMeasure());
-        requestBody.setGridSize(testDataConfig.gridSize());
-        requestBody.setLocalLanguageEnabled(testDataConfig.localLanguageEnabled());
-        requestBody.setSearchTerm(testDataConfig.searchTerm());
+            });
 
-        Response createResponse = given()
-                .when()
-                .header("Authorization", credentialsConfig.authorizationToken())
-                .contentType(ContentType.JSON)
-                .body(requestBody.toString())
-                .log().all()
-                .when()
-                .post(endpoint)
-                .then()
-                .log().all()
-                .statusCode(201)
-                .body("id", is(notNullValue()))
-                .extract().response();
+            step("sending create request and validating the result", () -> {
+                Response createResponse = given()
+                        .spec(requestSpecification)
+                        .body(requestBody.toString())
+                        .post(endpoint)
+                        .then()
+                        .spec(responseSpecification201)
+                        .body("id", is(notNullValue()))
+                        .extract().response();
 
-        //JsonPath jsonPathEvaluator = createResponseBody.jsonPath();
-        String geogridId = createResponse.path("id");
+                String geogridId = createResponse.path("id");
 
-        String getEndpoint = String.format("/%s", geogridId);
+                String getEndpoint = String.format("/%s", geogridId);
+                step("validating created geogrid fields", () -> {
+                    FetchGeogridResponseBody fetchResponseBody = given()
+                            .spec(requestSpecification)
+                            .get(getEndpoint)
+                            .then()
+                            .spec(responseSpecification200)
+                            .extract().as(FetchGeogridResponseBody.class);
 
-        FetchGeogridResponseBody fetchResponseBody = given()
-                .when()
-                .header("Authorization", credentialsConfig.authorizationToken())
-                .log().all()
-                .get(getEndpoint)
-                .then()
-                .log().all()
-                .statusCode(200)
-                .extract().as(FetchGeogridResponseBody.class);
-
-        assertThat(fetchResponseBody.getId(), notNullValue());
-        assertThat(fetchResponseBody.getBusinessName(), equalTo(requestBody.getBusinessName()));
-        assertThat(fetchResponseBody.getBusinessPlaceId(), equalTo(requestBody.getBusinessPlaceId()));
-        assertThat(fetchResponseBody.getBusinessCountry(), equalTo(requestBody.getBusinessCountry()));
-        assertThat(fetchResponseBody.getGridCenterLat(), equalTo(requestBody.getGridCenterLat()));
-        assertThat(fetchResponseBody.getGridCenterLng(), equalTo(requestBody.getGridCenterLng()));
-        assertThat(fetchResponseBody.getGridPointDistance(), equalTo(requestBody.getGridPointDistance()));
-        assertThat(fetchResponseBody.getGridDistanceMeasure(), equalTo(requestBody.getGridDistanceMeasure()));
-        assertThat(fetchResponseBody.getSearchTerm(), equalTo(requestBody.getSearchTerm()));
+                    assertThat(fetchResponseBody.getId(), notNullValue());
+                    assertThat(fetchResponseBody.getBusinessName(), equalTo(requestBody.getBusinessName()));
+                    assertThat(fetchResponseBody.getBusinessPlaceId(), equalTo(requestBody.getBusinessPlaceId()));
+                    assertThat(fetchResponseBody.getBusinessCountry(), equalTo(requestBody.getBusinessCountry()));
+                    assertThat(fetchResponseBody.getGridCenterLat(), equalTo(requestBody.getGridCenterLat()));
+                    assertThat(fetchResponseBody.getGridCenterLng(), equalTo(requestBody.getGridCenterLng()));
+                    assertThat(fetchResponseBody.getGridPointDistance(), equalTo(requestBody.getGridPointDistance()));
+                    assertThat(fetchResponseBody.getGridDistanceMeasure(), equalTo(requestBody.getGridDistanceMeasure()));
+                    assertThat(fetchResponseBody.getSearchTerm(), equalTo(requestBody.getSearchTerm()));
+                });
+            });
+        });
     }
 }

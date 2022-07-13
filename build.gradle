@@ -11,14 +11,15 @@ repositories {
     mavenCentral()
 }
 
-def allureVersion = "2.17.3",
+def allureVersion = "2.18.1",
     restAssuredVersion = "5.1.1",
     junitVersion = "5.8.2",
     slf4jVersion = "1.7.36",
     ownerVersion = "1.0.12",
     fakerVersion = "1.0.2",
     jacksonVersion = "2.13.3",
-    gsonVersion = "2.9.0"
+    gsonVersion = "2.9.0",
+    allureRestAssuredVersion = "2.18.1"
 
 
 dependencies {
@@ -29,7 +30,8 @@ dependencies {
             "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
             "org.aeonbits.owner:owner:$ownerVersion",
             "io.qameta.allure:allure-selenide:$allureVersion",
-            "com.google.code.gson:gson:$gsonVersion"
+            "com.google.code.gson:gson:$gsonVersion",
+            "io.qameta.allure:allure-rest-assured:$allureRestAssuredVersion"
 }
 
 allure {
