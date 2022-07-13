@@ -43,5 +43,8 @@ target/
 /gradlew.bat
 settings.gradle
 
+#notifications settings for allure-notifications-4.1.jar
+/notifications
+
 #macOS files
 .DS_Store

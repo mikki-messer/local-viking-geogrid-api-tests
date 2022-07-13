@@ -1,11 +1,8 @@
 package com.github.mikkimesser.tests;
 
-import com.github.mikkimesser.configuration.TestDataConfig;
 import com.github.mikkimesser.models.CreateGeogridRequestBody;
 import com.github.mikkimesser.models.FetchGeogridResponseBody;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,22 +10,10 @@ import static com.github.mikkimesser.helpers.CustomApiListener.withCustomTemplat
 import static com.github.mikkimesser.specifications.Specifications.*;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class GeogridApiTests extends TestBase {
-    /*
-    1. Модель для респонса searchGeogridByExistingIdTest() +
-    2. Cпецификации +
-    3. Аллюр лисенер +
-    4. Степы
-    5. Шаблоны +
-    6. Telegram-бот
-    7. Ридми.мд
-    8. Дженкинс
-     */
     @Test
     @DisplayName("find geogrid by existing id test")
     void searchGeogridByExistingIdTest() {
