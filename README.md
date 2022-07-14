@@ -13,12 +13,12 @@
 - <a href="#crossed_swords-technology-stack">Technology stack</a>
 - <a href="#crossed_swords-how-to-launch-from-the-command-line">How to launch from the command line</a>
   - <a href="#gear-required-credentials">Required credentials</a>
-  - <a href="#gear-credentials.properties-example">Credentials.properties example</a> 
+  - <a href="#gear-credentialsproperties-example">Credentials.properties example</a> 
   - <a href="#gear-prepare-test-data">Prepare test data</a>
   - <a href="#gear-launch">Launch</a>
 - <a href="#crossed_swords-jenkins-build-example">Jenkins build example</a>
 - <a href="#crossed_swords-allure-reports-integration">Allure reports integration</a>
-- <a href="#crossed_swords-telegram-Notification">Telegram Notification</a>
+- <a href="#crossed_swords-telegram-notification-example">Telegram Notification</a>
 
 ## :crossed_swords: Introduction
 
