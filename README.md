@@ -6,10 +6,10 @@
 <img title="Local Viking Welcome" src="images/screenshots/LocalVikingWelcome.png">
 </p>
 
-## :axe: Contents
+## :crossed_swords: Contents
 
-- <a href="#axe-what is Local Viking">What is Local Viking?</a>
-- <a href="#axe-coverage">Coverage</a>
+- <a href="#crossed_swords-what is Local Viking">What is Local Viking?</a>
+- <a href="#crossed_swords-coverage">Coverage</a>
 - <a href="#rescue_worker_helmet-technology-stack">Technology stack</a>
 - <a href="#rescue_worker_helmet-how-to-launch-from-the-command-line">How to launch from the command line</a>
 - <a href="#rescue_worker_helmet-jenkins-build-example">Jenkins build example</a>
@@ -17,7 +17,7 @@
 - <a href="#rescue_worker_helmet-telegram-Notification">Telegram Notification</a>
 - <a href="#rescue_worker_helmet-selenoid-launch-example">Selenoid launch example</a>
 
-## :axe: What is Local Viking
+## :crossed_swords: What is Local Viking
 
 <p>
 Local Viking is one of the most popular Google My Business software management platforms. 
@@ -28,7 +28,7 @@ latitude and longitude coordinates, in other words, it gives a view of how GMB L
 across one geographic area (a square to be precise).
 </p>
 
-## :axe: Coverage
+## :crossed_swords: Coverage
 
 
 - Check that GET request to the `/geogrids/:id` endpoint with the `:id` of the GeoGrid existing in the database and valid authorization token returns the Geogrid
@@ -39,7 +39,7 @@ across one geographic area (a square to be precise).
 - Check that GET request to the `/geogrids` endpoint with the `page` query parameter returns the array of Geogrids from the specific page
 - Check that POST request to the `/geogrids` endpoint with the GeoGrid data in the body creates the GeoGrid
 
-## :axe: Technology stack
+## :crossed_swords: Technology stack
 
 <p align="center">
 <img width="6%" title="IntelliJ IDEA" src="images/logos/Intelij_IDEA.svg">
