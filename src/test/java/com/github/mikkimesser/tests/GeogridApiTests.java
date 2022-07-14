@@ -29,7 +29,7 @@ public class GeogridApiTests extends TestBase {
                     .extract().as(FetchGeogridResponseBody.class);
             step("verifying fetched geogrid data", () -> {
                 assertThat(responseBody.getId(), equalTo(geogridId));
-                assertThat(responseBody.getRanks().length, greaterThan(0));
+                assertThat(responseBody.getBusinessName(), notNullValue());
             });
         });
     }
