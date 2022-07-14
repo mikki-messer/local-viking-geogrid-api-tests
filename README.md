@@ -8,7 +8,7 @@
 
 ## :crossed_swords: Contents
 
-- <a href="#crossed_swords-what-is-Local-Viking?">What is Local Viking?</a>
+- <a href="#crossed_swords-introduction">Introduction</a>
 - <a href="#crossed_swords-coverage">Coverage</a>
 - <a href="#rescue_worker_helmet-technology-stack">Technology stack</a>
 - <a href="#rescue_worker_helmet-how-to-launch-from-the-command-line">How to launch from the command line</a>
@@ -17,7 +17,7 @@
 - <a href="#rescue_worker_helmet-telegram-Notification">Telegram Notification</a>
 - <a href="#rescue_worker_helmet-selenoid-launch-example">Selenoid launch example</a>
 
-## :crossed_swords: What is Local Viking?
+## :crossed_swords: Introduction
 
 <p>
 Local Viking is one of the most popular Google My Business software management platforms. 
