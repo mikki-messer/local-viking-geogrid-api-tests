@@ -10,12 +10,11 @@
 
 - <a href="#crossed_swords-introduction">Introduction</a>
 - <a href="#crossed_swords-coverage">Coverage</a>
-- <a href="#rescue_worker_helmet-technology-stack">Technology stack</a>
-- <a href="#rescue_worker_helmet-how-to-launch-from-the-command-line">How to launch from the command line</a>
-- <a href="#rescue_worker_helmet-jenkins-build-example">Jenkins build example</a>
-- <a href="#rescue_worker_helmet-allure-reports-integration">Allure reports integration</a>
-- <a href="#rescue_worker_helmet-telegram-Notification">Telegram Notification</a>
-- <a href="#rescue_worker_helmet-selenoid-launch-example">Selenoid launch example</a>
+- <a href="#crossed_swords-technology-stack">Technology stack</a>
+- <a href="#crossed_swords-how-to-launch-from-the-command-line">How to launch from the command line</a>
+- <a href="#crossed_swords-jenkins-build-example">Jenkins build example</a>
+- <a href="#crossed_swords-allure-reports-integration">Allure reports integration</a>
+- <a href="#crossed_swords-telegram-Notification">Telegram Notification</a>
 
 ## :crossed_swords: Introduction
 
@@ -27,15 +26,19 @@ It provides an opportunity to see the visibility of a GMB listing for a specific
 latitude and longitude coordinates, in other words, it gives a view of how GMB Listing ranks from different positions
 across one geographic area (a square to be precise).
 </p>
+<p>
+More information: <a href="https://help.localviking.com/en/articles/2893952-geogrid-rank-tracking-explained" target="_blank">help.localviking.com</a>
+</p>
+<p align="center">
+<img title="Local Viking GeoGrid example" src="images/screenshots/LocalVikingGeogridExample.png">
+</p>
 
 ## :crossed_swords: Coverage
-
 
 - Check that GET request to the `/geogrids/:id` endpoint with the `:id` of the GeoGrid existing in the database and valid authorization token returns the Geogrid
 - Check that GET request to the `/geogrids/:id` endpoint with the `:id` of the GeoGrid existing in the database and non-existing authorization token gets 403 result code
 - Check that GET request to the `/geogrids/:id` endpoint with the `:id` of the GeoGrid existing in the database and without authorization token gets 403 result code
 - Check that GET request to the `/geogrids/:id` endpoint with the `:id` of the GeoGrid non-existing in the database and valid authorization token get 404 result code
-- Check that GET request to the `/geogrids/:id` endpoint with the `:id` of the GeoGrid non-existing in the database and valid authorization token returns the Geogrid
 - Check that GET request to the `/geogrids` endpoint with the `page` query parameter returns the array of Geogrids from the specific page
 - Check that POST request to the `/geogrids` endpoint with the GeoGrid data in the body creates the GeoGrid
 
@@ -53,56 +56,62 @@ across one geographic area (a square to be precise).
 <img width="6%" title="Telegram" src="images/logos/Telegram.svg">
 </p>
 
-## :rescue_worker_helmet: How to launch from the command line
+## :crossed_swords: How to launch from the command line
 
-### How to launch on the local machine
+### :gear: Required credentials
 
-<p>
-Default params
-</p>
+- `authorizationToken` - a valid authorization token for Local Viking API
+- `nonExistingAuthorizationToken` - an example of 100%-incorrect authorization token
+- `baseUrl` - a URL for access to the Local Viking API server
+- `geogrids` - a default path for access to the Local Viking GeoGrid API
 
-- browser: chrome
-- browser size: 1280x800
-- remoteURL: selenoid.autotests.cloud
+The credentials might be passed via the `system.getProperties` or via the `src/test/resources/configuration/credentials.properties` file.
+
+### :gear :Credentials.properties example, put your real valid authorization token there
+
+>Feel free to change the `nonExistingAuthorizationToken` value to avoid the `pesticide paradox`.
+
+```
+baseUrl=https://api.localviking.com
+geogridsBasePath=/geogrids
+authorizationToken=myAwesomeLVApiToken
+nonExistingAuthorizationToken=nonexistingToken
+```
+
+### :gear: Prepare test data
+
+The test data is passed via the `src/test/resources/configuration/testData.properties` file
+
+Required test data:
+- `business_name` - String. Required for the Create GeoGrid test. The name of the business to build the GeoGrid for.
+- `business_place_id` - String. Required for the Create GeoGrid test. The Google PlaceId of the business to build the GeoGrid for. You can get it here: <a href = "https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder" target = "_blank">https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder</a>.
+- `grid_center_lat` - Double. Required for the Create GeoGrid test. The latitude of the GeoGrid center.
+- `grid_center_lng` - Double. Required for the Create GeoGrid test. The longitude of the GeoGrid center.
+- `grid_size` - Integer. Required for the Create GeoGrid test. The size of the GeoGrid. Supported values: 3, 5, 7, 9, 13. 
+- `grid_distance_measure` - String. Required for the Create GeoGrid test. The unit of distance between the GeoGrid nodes. Supported values: meters, miles.
+- `grid_point_distance` - Double. Required for the Create GeoGrid test. The distance between the GeoGrid nodes. Supported values: meters - 100, 200, 500, 1000, 2500, 5000, 10000, 25000. miles - 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 5, 8, 10.
+- `business_country` - String. Required for the Create GeoGrid test. Two-character ISO-code of the business country.
+- `search_term` - String. Required for the Create GeoGrid test. The keyword to check the visibility of the business for.
+- `local_language_enabled` - Boolean. Required for the Create GeoGrid test. The switch pointing if the tracker should use Global or Local Google site (if available).
+- `existingGeogridId` - 
+- `nonExistingGeogridId`
+- `geogridListPageNumber`
+
+### How to launch from the commandline
+
+Launch without the `credentials.properties` file
+
+```
+gradle clean test -DbaseUrl=https://api.lvstaging.space -DgeogridsBasePath=/geogrids -DauthorizationToken=rXaDWNuckawj7oGqmSK2vS4W -DnonExistingAuthorizationToken=nonexistingToken
+```
+
+Launch with the `credentials.properties` file
 
 ```
 gradle clean test
 ```
 
-Arbitrary params
-```
-gradle clean test -DselenoidURL="yourAwesomeURL" -Dbrowser="yourPreciousBrowser" -DbrowserSize="AAAAxBBBB"
-```
-
-### How to launch remotely on Jenkins
-
-```
-clean
-test
--DselenoidURL=${SELENOID_URL}
--Dbrowser=${BROWSER}
--DbrowserSize=${BROWSER_SIZE}
-```
-
-### Jenkins build params
-
-- selenoidURL - the URL of the Selenoid instance to run tests on, default value: `selenoid.autotests.cloud`
-- browser - the browser, chrome, firefox, and opera are supported, default value: `chrome`
-- browserSize - the size of the browser window in AAAAxBBBB format, default value: `1280x800`
-
-> Don't forget to create the `credentials.properties` file in the `src/test/resources/configuration/` folder with the
-login and password to the Selenoid
-
-#### Credentials.properties example, put your real login and password there
-
-```
-login=myAwesomeLogin
-password=mySecurePassword
-```
-
 ## :rescue_worker_helmet: Jenkins build example
-
-### <a target="_blank" href="https://jenkins.autotests.cloud/job/C12-Mike-B-lesson-13-redrift.com/">Jenkins build</a>
 
 <p align="center">
 <img title="Jenkins Dashboard" src="images/screenshots/jenkins-redrift-build-main-page.png">
@@ -122,8 +131,6 @@ password=mySecurePassword
 <img title="Allure reports Test suites tab screenshot" src="images/screenshots/allure-redrift-reports-tests.png">
 </p>
 
-> Please note, saving browser console logs to Allure reports is not supported for Firefox!!!
-
 ## :rescue_worker_helmet: Telegram Notification example
 
 > <a href="https://github.com/qa-guru/allure-notifications">qa-guru/allure-notifications</a> is used
@@ -132,11 +139,4 @@ password=mySecurePassword
 <img title="Telegram notification screenshot" src="images/screenshots/telegram-redrift-tests-notification.png">
 </p>
 
-## :rescue_worker_helmet: Selenoid launch example
-
-There is a video for each test demonstrating the flow.
-
-<p align="center">
-<img title="Selenoid Video" src="images/gifs/closing-the-lion.gif">
-</p>
 
