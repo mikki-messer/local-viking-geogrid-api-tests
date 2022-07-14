@@ -1,4 +1,4 @@
-# Automated tests for the localviking.com GeoGrid API tests
+# Automated tests for the localviking.com GeoGrid API
 
 ## <a href = "https://localviking.com" target ="_blank">localviking.com</a>
 
@@ -12,6 +12,10 @@
 - <a href="#crossed_swords-coverage">Coverage</a>
 - <a href="#crossed_swords-technology-stack">Technology stack</a>
 - <a href="#crossed_swords-how-to-launch-from-the-command-line">How to launch from the command line</a>
+  - <a href="#gear-required-credentials">Required credentials</a>
+  - <a href="#gear-credentials.properties-example">Credentials.properties example</a> 
+  - <a href="#gear-prepare-test-data">Prepare test data</a>
+  - <a href="#gear-launch">Launch</a>
 - <a href="#crossed_swords-jenkins-build-example">Jenkins build example</a>
 - <a href="#crossed_swords-allure-reports-integration">Allure reports integration</a>
 - <a href="#crossed_swords-telegram-Notification">Telegram Notification</a>
@@ -65,11 +69,11 @@ More information: <a href="https://help.localviking.com/en/articles/2893952-geog
 - `baseUrl` - a URL for access to the Local Viking API server
 - `geogrids` - a default path for access to the Local Viking GeoGrid API
 
-The credentials might be passed via the `system.getProperties` or via the `src/test/resources/configuration/credentials.properties` file.
+The credentials might be passed via the `system properties` or via the `src/test/resources/configuration/credentials.properties` file.
 
-### :gear :Credentials.properties example, put your real valid authorization token there
+### :gear: Credentials.properties example
 
->Feel free to change the `nonExistingAuthorizationToken` value to avoid the `pesticide paradox`.
+>Put your real valid authorization token there. Feel free to change the `nonExistingAuthorizationToken` value to avoid the `pesticide paradox`.
 
 ```
 baseUrl=https://api.localviking.com
@@ -93,50 +97,50 @@ Required test data:
 - `business_country` - String. Required for the Create GeoGrid test. Two-character ISO-code of the business country.
 - `search_term` - String. Required for the Create GeoGrid test. The keyword to check the visibility of the business for.
 - `local_language_enabled` - Boolean. Required for the Create GeoGrid test. The switch pointing if the tracker should use Global or Local Google site (if available).
-- `existingGeogridId` - 
-- `nonExistingGeogridId`
-- `geogridListPageNumber`
+- `existingGeogridId` - String. Required for the Search Existing GeoGrid test. The id of the GeoGrid existing in the organization where the authorization token was issued.
+- `nonExistingGeogridId` - String. Required for the Search Non-Existing GeoGrid test. The example of GeoGrid id that doesn't exist in the organization where the authorization token was issued.
+- `geogridListPageNumber` - Integer. Required for the Get The List of GeoGrids From the page. The number of the page of the GeoGrid list. Minimum value = 1.
 
-### How to launch from the commandline
+### :gear: Launch
 
-Launch without the `credentials.properties` file
+Launch without the `src/test/resources/configuration/credentials.properties` file
 
 ```
 gradle clean test -DbaseUrl=https://api.lvstaging.space -DgeogridsBasePath=/geogrids -DauthorizationToken=rXaDWNuckawj7oGqmSK2vS4W -DnonExistingAuthorizationToken=nonexistingToken
 ```
 
-Launch with the `credentials.properties` file
+Launch with the `src/test/resources/configuration/credentials.properties` file
 
 ```
 gradle clean test
 ```
 
-## :rescue_worker_helmet: Jenkins build example
+## :crossed_swords: Jenkins build example
 
 <p align="center">
-<img title="Jenkins Dashboard" src="images/screenshots/jenkins-redrift-build-main-page.png">
+<img title="Jenkins Dashboard" src="images/screenshots/JenkinsJobLocalVikingApi-01.png">
 </p>
 
-## :rescue_worker_helmet: Allure reports integration
+## :crossed_swords: Allure reports integration
 
-### Overview
+### :gear: Overview
 
 <p align="center">
-<img title="Allure reports Overview tab screenshot" src="images/screenshots/allure-reports-redrift-main-page.png">
+<img title="Allure reports Overview tab screenshot" src="images/screenshots/LocalVikingApiAllureReportOverview.png">
 </p>
 
-### Test Suites
+### :gear: Test Suites
 
 <p align="center">
-<img title="Allure reports Test suites tab screenshot" src="images/screenshots/allure-redrift-reports-tests.png">
+<img title="Allure reports Test suites tab screenshot" src="images/screenshots/LocalVikingApiAllureReportTestSuites.png">
 </p>
 
-## :rescue_worker_helmet: Telegram Notification example
+## :crossed_swords: Telegram Notification example
 
-> <a href="https://github.com/qa-guru/allure-notifications">qa-guru/allure-notifications</a> is used
+> <a href="https://github.com/qa-guru/allure-notifications">qa-guru/allure-notifications</a> is used.
 
 <p align="center">
-<img title="Telegram notification screenshot" src="images/screenshots/telegram-redrift-tests-notification.png">
+<img title="Telegram notification screenshot" src="images/screenshots/LocalVikingApiTelegramInformerExample.png">
 </p>
 
 
