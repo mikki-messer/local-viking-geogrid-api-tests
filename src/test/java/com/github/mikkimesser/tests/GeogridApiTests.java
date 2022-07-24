@@ -15,9 +15,9 @@ import static org.hamcrest.Matchers.*;
 
 public class GeogridApiTests extends TestBase {
     @Test
-    @DisplayName("find geogrid by existing id test")
+    @DisplayName("Find the geogrid by existing id test")
     void searchGeogridByExistingIdTest() {
-        step("search geogrid by id and validate the result", () -> {
+        step("Search the geogrid by id and validate the result", () -> {
             String geogridId = testDataConfig.existingGeogridId();
             String endpoint = String.format("/%s", geogridId);
 
@@ -27,7 +27,7 @@ public class GeogridApiTests extends TestBase {
                     .then()
                     .spec(responseSpecification200)
                     .extract().as(FetchGeogridResponseBody.class);
-            step("verifying fetched geogrid data", () -> {
+            step("Verify the fetched geogrid data", () -> {
                 assertThat(responseBody.getId(), equalTo(geogridId));
                 assertThat(responseBody.getBusinessName(), notNullValue());
             });
@@ -35,12 +35,12 @@ public class GeogridApiTests extends TestBase {
     }
 
     @Test
-    @DisplayName("search geogrid by non-existing id test")
+    @DisplayName("Search the geogrid by the non-existing id test")
     void searchGeogridByNonExistingIdTest() {
-        step("search geogrid by non-existent id and check the result code", () -> {
+        step("Search the geogrid by non-existent id and check the result code", () -> {
             String endpoint = String.format("/%s", testDataConfig.nonExistingGeogridId());
 
-            step("verify result code", () ->
+            step("Verify the result code", () ->
                     given()
                             .spec(requestSpecification)
                             .get(endpoint)
@@ -51,13 +51,13 @@ public class GeogridApiTests extends TestBase {
     }
 
     @Test
-    @DisplayName("search geogrid with non-existing authorization token test")
+    @DisplayName("Search the geogrid with the non-existent authorization token test")
     void searchGeogridWithNonExistingAuthTokenTest() {
-        step("search geogrid with non-existent authorization token header and check the result code", () -> {
+        step("Search geogrid with the non-existent authorization token header and check the result code", () -> {
             String geogridId = testDataConfig.existingGeogridId();
             String endpoint = String.format("/%s", geogridId);
 
-            step("verify result code", () ->
+            step("Verify the result code", () ->
                     given()
                             .when()
                             .header("Authorization", credentialsConfig.nonExistingAuthorizationToken())
@@ -70,13 +70,13 @@ public class GeogridApiTests extends TestBase {
     }
 
     @Test
-    @DisplayName("search geogrid without authorization token test")
+    @DisplayName("Search the geogrid without the authorization token test")
     void searchGeogridWithoutAuthTokenTest() {
-        step("search geogrid without authorization token header and check the result code", () -> {
+        step("Search the geogrid without the authorization token header and check the result code", () -> {
             String geogridId = testDataConfig.existingGeogridId();
             String endpoint = String.format("/%s", geogridId);
 
-            step("verify result code", () ->
+            step("Verify the result code", () ->
                     given()
                             .when()
                             .filter(withCustomTemplates())
@@ -88,9 +88,9 @@ public class GeogridApiTests extends TestBase {
     }
 
     @Test
-    @DisplayName("get geogrids list by page number test")
+    @DisplayName("Get the list of geogrids by the page number test")
     void getGeogridsListByPageNumberTest() {
-        step(String.format("fetching the list of geogrids on the page number %s",
+        step(String.format("Fetch the list of geogrids on the page number %s",
                 testDataConfig.geogridListPageNumber().toString()), () -> {
 
             String endpoint = "/";
@@ -102,20 +102,20 @@ public class GeogridApiTests extends TestBase {
                             .then()
                             .spec(responseSpecification200)
                             .extract().as(FetchGeogridResponseBody[].class);
-            step("check fetched list length", () ->
+            step("Check the length of the fetched list", () ->
                     assertThat(geogridsList.length, greaterThan(0)));
         });
     }
 
     @Test
-    @DisplayName("create geogrid test")
+    @DisplayName("Create geogrid test")
     void createGeogridTest() {
-        step("creating new geogrid", () -> {
+        step("Create new geogrid", () -> {
             String endpoint = "/";
 
             CreateGeogridRequestBody requestBody = new CreateGeogridRequestBody();
 
-            step("initializing create request body", () -> {
+            step("Initialize create request body", () -> {
                 requestBody.setBusinessName(testDataConfig.businessName());
                 requestBody.setBusinessPlaceId(testDataConfig.businessPlaceId());
                 requestBody.setBusinessCountry(testDataConfig.businessCountry());
@@ -129,7 +129,7 @@ public class GeogridApiTests extends TestBase {
 
             });
 
-            step("sending create request and validating the result", () -> {
+            step("Send the create request and validate the result", () -> {
                 Response createResponse = given()
                         .spec(requestSpecification)
                         .body(requestBody.toString())
@@ -142,7 +142,8 @@ public class GeogridApiTests extends TestBase {
                 String geogridId = createResponse.path("id");
 
                 String getEndpoint = String.format("/%s", geogridId);
-                step("validating created geogrid fields", () -> {
+
+                step("Validate created geogrid fields", () -> {
                     FetchGeogridResponseBody fetchResponseBody = given()
                             .spec(requestSpecification)
                             .get(getEndpoint)
