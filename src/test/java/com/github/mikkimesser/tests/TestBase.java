@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 
 public class TestBase {
 
-    //public static String authToken;
     static CredentialsConfig credentialsConfig = ConfigFactory.create(CredentialsConfig.class, System.getProperties());
     static TestDataConfig testDataConfig = ConfigFactory.create(TestDataConfig.class, System.getProperties());
 

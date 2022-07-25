@@ -20,17 +20,6 @@ def allureVersion = "2.18.1",
     gsonVersion = "2.9.0",
     allureRestAssuredVersion = "2.18.1"
 
-
-dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion",
-            "org.slf4j:slf4j-simple:$slf4jVersion",
-            "io.rest-assured:rest-assured:$restAssuredVersion",
-            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
-            "org.aeonbits.owner:owner:$ownerVersion",
-            "com.google.code.gson:gson:$gsonVersion",
-            "io.qameta.allure:allure-rest-assured:$allureRestAssuredVersion"
-}
-
 allure {
     report {
         version.set(allureVersion)
@@ -43,6 +32,16 @@ allure {
             }
         }
     }
+}
+
+dependencies {
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion",
+            "org.slf4j:slf4j-simple:$slf4jVersion",
+            "io.rest-assured:rest-assured:$restAssuredVersion",
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "org.aeonbits.owner:owner:$ownerVersion",
+            "com.google.code.gson:gson:$gsonVersion",
+            "io.qameta.allure:allure-rest-assured:$allureRestAssuredVersion"
 }
 
 test {
